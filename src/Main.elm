@@ -1,4 +1,4 @@
-module Main exposing
+port module Main exposing
     ( conf
     , main
     )
@@ -66,7 +66,7 @@ init flags url key =
     ( Model shared page
     , Cmd.batch
         [ Cmd.map Shared sharedCmd
-        , Cmd.map Pages pageCmd
+        , Cmd.map MsgPages pageCmd
         ]
     )
 
@@ -79,7 +79,7 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url
     | Shared Shared.Msg
-    | Pages Pages.Msg
+    | MsgPages Pages.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -107,7 +107,7 @@ update msg model =
                     Pages.init (fromUrl url) shared
             in
             ( { model | page = page, shared = Pages.save page shared }
-            , Cmd.map Pages pageCmd
+            , Cmd.map MsgPages pageCmd
             )
 
         Shared sharedMsg ->
@@ -121,11 +121,11 @@ update msg model =
             ( { model | page = page, shared = shared }
             , Cmd.batch
                 [ Cmd.map Shared sharedCmd
-                , Cmd.map Pages pageCmd
+                , Cmd.map MsgPages pageCmd
                 ]
             )
 
-        Pages pageMsg ->
+        MsgPages pageMsg ->
             let
                 ( page, pageCmd ) =
                     Pages.update pageMsg model.page
@@ -134,7 +134,7 @@ update msg model =
                     Pages.save page model.shared
             in
             ( { model | page = page, shared = shared }
-            , Cmd.map Pages pageCmd
+            , Cmd.map MsgPages pageCmd
             )
 
 
@@ -143,7 +143,7 @@ view model =
     Shared.view
         { page =
             Pages.view model.page
-                |> Document.map Pages
+                |> Document.map MsgPages
         , toMsg = Shared
         }
         model.shared
@@ -155,7 +155,7 @@ subscriptions model =
         [ Shared.subscriptions model.shared
             |> Sub.map Shared
         , Pages.subscriptions model.page
-            |> Sub.map Pages
+            |> Sub.map MsgPages
         ]
 
 
