@@ -53,6 +53,8 @@
         "terser": "^4.8.0"
     },
     "dependencies": {
+        "base64url": "^3.0.1",
+        "bch-js-reg": "^0.1.0",
         "randombytes": "^2.1.0"
     }
 }
