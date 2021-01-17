@@ -113,7 +113,7 @@ view { page, toMsg } model =
                         ]
                     , wrappedRow [ spacing 20, width fill ]
                         [ link buttonAttrs { url = Route.toString Route.Top, label = text "Top" }
-                        , link buttonAttrs { url = Route.toString Route.PageA, label = text "Page A" }
+                        , link buttonAttrs { url = Route.toString Route.Bch, label = text "Create" }
                         , link buttonAttrs { url = Route.toString Route.PageB, label = text "Page B" }
                         ]
                     ]
