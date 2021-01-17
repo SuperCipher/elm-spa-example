@@ -29,8 +29,14 @@ type alias Params =
     ()
 
 
+type alias CashInfo =
+    { balance : String
+    , address : String
+    }
+
+
 type alias Model =
-    Url Params
+    CashInfo
 
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
@@ -40,14 +46,18 @@ init shared url =
             Dict.get "w" url.query
 
         _ =
-            Debug.log "debug" shared
+            Debug.log "wallet" wallet
     in
     case Dict.get "w" url.query of
         Just query ->
-            ( url, gettingCashInfo query )
+            ( { balance = "", address = "" }, gettingCashInfo query )
 
         Nothing ->
-            ( url, Cmd.none )
+            let
+                _ =
+                    Debug.log "url.query" "nothing"
+            in
+            ( { balance = "", address = "" }, Cmd.none )
 
 
 page : Page Params Model Msg
@@ -74,11 +84,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         MsgCashInfo balance ->
-            let
-                _ =
-                    Debug.log "debug" balance
-            in
-            ( model, Cmd.none )
+            ( { balance = balance, address = "" }, Cmd.none )
 
 
 save : Model -> Shared.Model -> Shared.Model
@@ -102,12 +108,9 @@ subscriptions model =
 
 view : Model -> Document Msg
 view model =
-    let
-        _ =
-            Debug.log "debug" model
-    in
     { title = "PageA"
     , body =
         [ el [ Font.size 32 ] <| text "Page A"
+        , el [ Font.size 32 ] <| text model.balance
         ]
     }
