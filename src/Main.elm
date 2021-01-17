@@ -1,4 +1,4 @@
-port module Main exposing
+module Main exposing
     ( conf
     , main
     )
@@ -19,15 +19,9 @@ import Starter.SnippetJavascript
 import Url exposing (Url)
 
 
-backgroundColor : { blue : number, green : number1, red : number2 }
-backgroundColor =
-    -- { red = 116, green = 222, blue = 165 }
-    { red = 38, green = 104, blue = 69 }
-
-
 conf : Starter.ConfMain.Conf
 conf =
-    { urls = [ "/", "/page-a", "/page-b" ]
+    { urls = [ "/", "/bch", "/page-b" ]
     , assetsToCache = []
     }
 
