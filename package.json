@@ -21,7 +21,7 @@
         "test:watch": "elm-test --watch",
         "build": "run-s build:elm-spa build:elm",
         "build:dev": "run-s build:elm-spa build:dev:elm",
-        "dev": "run-p dev:elm-spa dev:elm",
+        "dev": "run-p dev:elm-spa dev:elm watchBrowserify",
         "build:elm": "elm make src/Main.elm --optimize --output=public/dist/elm.compiled.js",
         "build:dev:elm": "elm make src/Main.elm --debug --output=public/dist/elm.compiled.js || true",
         "build:elm-spa": "elm-spa build .",
