@@ -101,8 +101,12 @@ app.ports.gettingCashInfo.subscribe(async function (encodedBase64RootSeed) {
     // console.log('CASHADDRESS', cashAddress0)
     const balance = await getBalance(cashAddress0)
     // console.log('BALANCE', balance.balance)
+    // const unconfirm = balance.balance.unconfirmed === 0 ? true : false
     app.ports.gotCashInfo.send(
-      cashAddress0
+      {
+        cashAddress0 :cashAddress0,
+        balance : balance.balance.confirmed,
+      }
     );
 })
 

@@ -5,6 +5,7 @@ import Element exposing (..)
 import Element.Font as Font
 import Html
 import Html.Attributes
+import Json.Decode as JsonDecode exposing (Decoder, Value, field, int, map3, string)
 import Shared
 import Spa.Document exposing (Document)
 import Spa.Page as Page exposing (Page)
@@ -18,7 +19,7 @@ import Spa.Url as Url exposing (Url)
 port gettingCashInfo : String -> Cmd msg
 
 
-port gotCashInfo : (String -> msg) -> Sub msg
+port gotCashInfo : (CashInfo -> msg) -> Sub msg
 
 
 
@@ -30,8 +31,8 @@ type alias Params =
 
 
 type alias CashInfo =
-    { balance : String
-    , address : String
+    { balance : Int
+    , cashAddress0 : String
     }
 
 
@@ -46,18 +47,18 @@ init shared url =
             Dict.get "w" url.query
 
         _ =
-            Debug.log "wallet" wallet
+            Debug.log "wallet" url.query
     in
     case Dict.get "w" url.query of
         Just query ->
-            ( { balance = "", address = "" }, gettingCashInfo query )
+            ( { balance = 0, cashAddress0 = "" }, gettingCashInfo query )
 
         Nothing ->
             let
                 _ =
                     Debug.log "url.query" "nothing"
             in
-            ( { balance = "", address = "" }, Cmd.none )
+            ( { balance = 0, cashAddress0 = "" }, Cmd.none )
 
 
 page : Page Params Model Msg
@@ -77,14 +78,18 @@ page =
 
 
 type Msg
-    = MsgCashInfo String
+    = MsgCashInfo CashInfo
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        MsgCashInfo balance ->
-            ( { balance = balance, address = "" }, Cmd.none )
+        MsgCashInfo cashInfo ->
+            let
+                _ =
+                    Debug.log "debug" cashInfo
+            in
+            ( { balance = cashInfo.balance, cashAddress0 = cashInfo.cashAddress0 }, Cmd.none )
 
 
 save : Model -> Shared.Model -> Shared.Model
@@ -98,19 +103,15 @@ load shared model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     gotCashInfo MsgCashInfo
-
-
-
--- VIEW
 
 
 view : Model -> Document Msg
 view model =
-    { title = "PageA"
+    { title = "Bitcoin Cash"
     , body =
-        [ el [ Font.size 32 ] <| text "Page A"
-        , el [ Font.size 32 ] <| text model.balance
+        [ el [ Font.size 32 ] <| text model.cashAddress0
+        , el [ Font.size 32 ] <| text (String.fromInt model.balance)
         ]
     }
